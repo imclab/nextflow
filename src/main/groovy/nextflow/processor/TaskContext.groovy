@@ -118,8 +118,12 @@ class TaskContext implements Map<String,Object> {
             return holder.get(property)
         }
 
-        if( script && script.binding?.hasVariable(property.toString()) ) {
-            return script.binding.getVariable(property.toString())
+        if( script ) {
+            if ( script.binding?.hasVariable(property.toString())) {
+                return script.binding.getVariable(property.toString())
+            } else {
+                return '${' + property.toString() + '}'
+            }
         }
 
         throw new MissingPropertyException("Unknown variable '$property' -- Make sure you didn't misspell it or define somewhere in the script before use it")
