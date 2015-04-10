@@ -60,7 +60,6 @@ class TaskProcessorTest extends Specification {
         @Override Object run() { return null }
     }
 
-
     def filterHidden() {
 
         setup:
@@ -164,6 +163,23 @@ class TaskProcessorTest extends Specification {
         i = TaskProcessor.fetchInterpreter('do this')
         then:
         i == null
+    }
+
+    def testScriptFile() {
+
+        setup:
+        def script = Files.createTempFile('test', 'script')
+        script.deleteOnExit()
+        def processor = [:] as TaskProcessor
+
+        when:
+        def binding = [name:'Foo']
+        script.text = '''
+        echo ${name}
+        '''
+        then:
+        processor.renderScriptFile(script, binding).strip() == 'echo Foo'
+
     }
 
     def testSingleItemOrCollection() {
