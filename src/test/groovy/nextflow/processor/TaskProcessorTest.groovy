@@ -20,8 +20,6 @@
 
 package nextflow.processor
 
-import java.nio.file.Path
-
 import static test.TestParser.parse
 
 import java.nio.file.FileSystems
