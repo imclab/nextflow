@@ -18,6 +18,10 @@
  *   along with Nextflow.  If not, see <http://www.gnu.org/licenses/>.
  */
 package nextflow.processor
+
+import org.multiverse.stms.gamma.GammaStm
+import sun.nio.fs.UnixPath
+
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.concurrent.atomic.AtomicBoolean
@@ -668,11 +672,29 @@ abstract class TaskProcessor {
      */
     final protected String getScriptlet( Closure<String> code ) {
         try {
-            return code.call()?.toString()
+            def script = code.call()
+            if ( script instanceof Path ) {
+                return renderScriptFile(script, code.delegate)
+            } else {
+                return script?.toString()
+            }
         }
         catch( Throwable e ) {
             throw new ProcessScriptException("Process script contains error(s)", e)
         }
+    }
+
+    /**
+     * Given a template script file and a binding, returns the rendered script content
+     *
+     * @param script
+     * @param binding
+     * @return
+     */
+    final protected String renderScriptFile( Path script , Map binding ) {
+        def engine = new groovy.text.GStringTemplateEngine()
+        def template = engine.createTemplate(script.newReader()).make(binding)
+        return template.toString()
     }
 
     /**

@@ -20,6 +20,8 @@
 
 package nextflow.processor
 
+import java.nio.file.Path
+
 import static test.TestParser.parse
 
 import java.nio.file.Files
@@ -56,7 +58,6 @@ class TaskProcessorTest extends Specification {
     static class DummyScript extends BaseScript {
         @Override Object run() { return null }
     }
-
 
     def filterHidden() {
 
@@ -161,6 +162,23 @@ class TaskProcessorTest extends Specification {
         i = TaskProcessor.fetchInterpreter('do this')
         then:
         i == null
+    }
+
+    def testScriptFile() {
+
+        setup:
+        def script = Files.createTempFile('test', 'script')
+        script.deleteOnExit()
+        def processor = [:] as TaskProcessor
+
+        when:
+        def binding = [name:'Foo']
+        script.text = '''
+        echo ${name}
+        '''
+        then:
+        processor.renderScriptFile(script, binding).strip() == 'echo Foo'
+
     }
 
     def testSingleItemOrCollection() {
