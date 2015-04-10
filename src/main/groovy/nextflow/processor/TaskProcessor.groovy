@@ -18,6 +18,10 @@
  *   along with Nextflow.  If not, see <http://www.gnu.org/licenses/>.
  */
 package nextflow.processor
+
+import org.multiverse.stms.gamma.GammaStm
+import sun.nio.fs.UnixPath
+
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.concurrent.atomic.AtomicBoolean
