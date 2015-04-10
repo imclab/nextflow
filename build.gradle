@@ -18,7 +18,7 @@
  *   along with Nextflow.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-version = '0.12.4'
+version = '0.12.5'
 apply plugin: 'groovy'
 apply plugin: 'idea'
 
@@ -91,6 +91,7 @@ configurations {
 dependencies {
     compile(project(':nxf-commons'))
     compile "org.codehaus.groovy:groovy:2.3.10"
+    compile "org.codehaus.groovy:groovy-templates:2.3.10"
     compile "org.codehaus.groovy:groovy-nio:2.3.10"
     compile "org.codehaus.groovy:groovy-json:2.3.10"
     compile "org.slf4j:jcl-over-slf4j:1.7.10"
