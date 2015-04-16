@@ -20,7 +20,6 @@
 package nextflow.processor
 
 import java.nio.file.Path
-import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
