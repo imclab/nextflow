@@ -676,11 +676,12 @@ abstract class TaskProcessor {
      * @param code
      * @return
      */
-    final protected String getScriptlet( Closure<String> code ) {
+    final protected String getScriptlet( TaskRun task ) {
         try {
-            def script = code.call()
+            def script = task.code.call()
             if ( script instanceof Path ) {
-                return renderScriptFile(script, code.delegate)
+                taskBody.source = script.text
+                return renderScriptFile(script, task.code.delegate)
             } else {
                 return script?.toString()
             }
@@ -1483,7 +1484,7 @@ abstract class TaskProcessor {
         // when the task is implemented by a script string
         // Invokes the closure which return the script whit all the variables replaced with the actual values
         if( type == ScriptType.SCRIPTLET ) {
-            task.script = getScriptlet(task.code)
+            task.script = getScriptlet(task)
         }
     }
 
