@@ -678,16 +678,10 @@ abstract class TaskProcessor {
      */
     final protected String getScriptlet( TaskRun task ) {
         try {
-<<<<<<< HEAD
             def script = task.code.call()
             if ( script instanceof Path ) {
                 taskBody.source = script.text
                 return renderScriptFile(script, task.code.delegate)
-=======
-            def script = code.call()
-            if ( script instanceof Path ) {
-                return renderScriptFile(script, code.delegate)
->>>>>>> 8e93f0a3afb2f3683dc4628ca29b31e56eb42b88
             } else {
                 return script?.toString()
             }
