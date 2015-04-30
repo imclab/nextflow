@@ -685,12 +685,14 @@ class DataflowExtensions {
     }
 
 
-    static private Map GROUP_TUPLE_PARAMS = [ by: Integer, sort: [Boolean, 'true','natural','deep','hash',Closure,Comparator] ]
+    static private Map GROUP_TUPLE_PARAMS = [ by: [List, Integer], sort: [Boolean, 'true','natural','deep','hash',Closure,Comparator] ]
 
     static public final DataflowReadChannel groupTuple( final DataflowReadChannel channel, final Map params ) {
         checkParams('groupTuple', params, GROUP_TUPLE_PARAMS)
 
-        final index = params?.containsKey('by') ? params.by as int : 0
+        if (params?.by instanceof Integer)
+            params.by = [params.by]
+        final index = params?.containsKey('by') ? params.by as List : [0]
 
         def reduced = reduce(channel, [:]) { Map groups, List tuple ->    // 'groups' is used to collect all values; 'tuple' is the record containing four items: barcode, seqid, bam file and bai file
             final key = tuple[index]                        // the actual grouping key
@@ -699,12 +701,12 @@ class DataflowExtensions {
             final List item = groups.getOrCreate(key) {     // get the group for the specified key
                 def result = new ArrayList(len)             // create if does not exists
                 for( int i=0; i<len; i++ )
-                    result[i] = (i==index ? key : new ArrayBag())
+                    result[i] = (i in index ? tuple[i] : new ArrayBag())
                 return result
             }
 
             for( int i=0; i<len; i++ ) {                    // append the values in the tuple
-                if( i != index )
+                if( ! (i in index) )
                     (item[i] as List) .add( tuple[i] )
             }
 
